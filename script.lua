@@ -1,11 +1,33 @@
+local TweenService = game:GetService("TweenService")
+
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 300, 0, 200)
 frame.Position = UDim2.new(0.5, -150, 0.5, -100)
-frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- เริ่มต้นด้วยสีเทา
 frame.Parent = screenGui
+
+-- ฟังก์ชันเปลี่ยนสีพื้นหลังของ Frame แบบค่อยๆ เปลี่ยนสีไปเรื่อยๆ
+local function changeColor()
+    while true do
+        -- สุ่มค่าสี RGB
+        local randomColor = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+        
+        -- ตั้งค่าการไล่สีด้วย Tween
+        local tween = TweenService:Create(frame, TweenInfo.new(2), {BackgroundColor3 = randomColor})
+        
+        -- เริ่มการเปลี่ยนสี
+        tween:Play()
+        
+        -- รอให้การไล่สีเสร็จสมบูรณ์ก่อนทำใหม่
+        tween.Completed:Wait()
+    end
+end
+
+-- เริ่มการเปลี่ยนสีพื้นหลังของ Frame
+spawn(changeColor)
 
 -- ชื่อที่มุมซ้ายบน
 local titleLabel = Instance.new("TextLabel")
@@ -73,6 +95,24 @@ teleportButton.MouseButton1Click:Connect(function()
 
         -- ตั้งตำแหน่งตัวละครตามค่าที่กรอกในกล่อง
         character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
+    else
+        print("ไม่พบตัวละคร!")
+    end
+end)
+
+-- ปุ่ม "โจรสลัด" สำหรับวาร์ปไปยังตำแหน่งเฉพาะ
+local pirateButton = Instance.new("TextButton")
+pirateButton.Text = "โจรสลัด"
+pirateButton.Size = UDim2.new(0, 260, 0, 40)
+pirateButton.Position = UDim2.new(0, 20, 0, 210)
+pirateButton.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
+pirateButton.Parent = frame
+
+pirateButton.MouseButton1Click:Connect(function()
+    local character = game.Players.LocalPlayer.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        -- วาร์ปไปยังตำแหน่งของโจรสลัด
+        character.HumanoidRootPart.CFrame = CFrame.new(-2825, 214, 1517)
     else
         print("ไม่พบตัวละคร!")
     end
